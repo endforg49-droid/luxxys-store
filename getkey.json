@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FREE KEY — LUXXY PROJECT</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #050d18; color: #80d4ff;
+    font-family: 'JetBrains Mono', 'Courier New', 'Consolas', monospace;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 20px; overflow-x: hidden; position: relative;
+    letter-spacing: 1px;
+  }
+  body::before {
+    content: "";
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image:
+      linear-gradient(rgba(80, 190, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(80, 190, 255, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -2; pointer-events: none;
+  }
+  body::after {
+    content: "";
+    position: fixed; top: 50%; left: 50%;
+    width: 600px; height: 600px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(80, 190, 255, 0.15) 0%, transparent 70%);
+    z-index: -1; pointer-events: none;
+    animation: pulseGlow 4s ease-in-out infinite;
+  }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  }
+
+  .card { width: 100%; max-width: 460px; animation: fadeUp 0.6s ease-out; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .header-label {
+    font-size: 12px; color: #80d4ff; letter-spacing: 3px;
+    text-align: center; margin-bottom: 8px; opacity: 0.7;
+  }
+  .header-title {
+    font-size: 32px; font-weight: 900; text-align: center;
+    margin-bottom: 6px; letter-spacing: 4px;
+    background: linear-gradient(90deg, #80d4ff, #00e0ff, #ffffff, #00e0ff, #80d4ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: titleShine 4s linear infinite;
+    filter: drop-shadow(0 0 15px rgba(80, 190, 255, 0.6));
+  }
+  @keyframes titleShine { to { background-position: 200% center; } }
+  .header-subtitle {
+    font-size: 12px; text-align: center; color: #a8c8e0;
+    letter-spacing: 3px; margin-bottom: 30px; opacity: 0.7;
+  }
+
+  .info-box {
+    position: relative;
+    background: rgba(5, 13, 24, 0.6);
+    border: 1px solid rgba(80, 190, 255, 0.35);
+    border-radius: 4px; padding: 26px 24px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(80, 190, 255, 0.15);
+  }
+  .info-box::before, .info-box::after, .corner-tl, .corner-tr {
+    content: ""; position: absolute;
+    width: 20px; height: 20px;
+    border: 2px solid #80d4ff;
+  }
+  .info-box::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+  .info-box::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+  .corner-tl { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+  .corner-tr { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+
+  .section-label {
+    font-size: 11px; color: #80d4ff; letter-spacing: 2px;
+    margin-bottom: 18px; opacity: 0.8;
+  }
+  .info-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(80, 190, 255, 0.12);
+    font-size: 13px; letter-spacing: 2px;
+  }
+  .info-row:last-of-type { border-bottom: none; margin-bottom: 24px; }
+  .info-label { color: #a8c8e0; letter-spacing: 3px; font-size: 12px; }
+  .info-value {
+    color: #80d4ff; font-weight: 700;
+    letter-spacing: 2px; font-size: 13px;
+  }
+  .info-value.badge {
+    padding: 3px 10px; border: 1px solid #80d4ff;
+    border-radius: 3px; font-size: 11px; color: #80d4ff;
+    background: rgba(80, 190, 255, 0.08);
+    box-shadow: 0 0 15px rgba(80, 190, 255, 0.2);
+  }
+
+  .btn {
+    display: block; width: 100%; padding: 18px;
+    background: transparent; color: #80d4ff;
+    border: 2px solid #80d4ff; border-radius: 3px;
+    font-family: inherit; font-size: 14px; font-weight: 900;
+    letter-spacing: 4px; cursor: pointer;
+    transition: all 0.3s ease; text-align: center;
+    text-decoration: none; position: relative; overflow: hidden;
+    box-shadow: 0 0 20px rgba(80, 190, 255, 0.2) inset;
+  }
+  .btn::before {
+    content: ""; position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(80, 190, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+  }
+  .btn:hover {
+    background: rgba(80, 190, 255, 0.15);
+    box-shadow: 0 0 30px rgba(80, 190, 255, 0.5), 0 0 20px rgba(80, 190, 255, 0.3) inset;
+    text-shadow: 0 0 10px rgba(80, 190, 255, 0.8);
+    transform: translateY(-2px);
+  }
+  .btn:hover::before { left: 100%; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .status {
+    text-align: center; font-size: 12px; color: #a8c8e0;
+    margin-top: 16px; letter-spacing: 2px; min-height: 20px;
+  }
+  .loading {
+    display: inline-block; width: 12px; height: 12px;
+    border: 2px solid rgba(80, 190, 255, 0.3);
+    border-top-color: #80d4ff; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px; vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .footer {
+    text-align: center; margin-top: 30px;
+    font-size: 11px; color: #5a7a9a; letter-spacing: 3px;
+  }
+  .footer a { color: #80d4ff; text-decoration: none; }
+
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+  }
+  .scanline {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(80, 190, 255, 0.4), transparent);
+    z-index: 999; pointer-events: none;
+    animation: scanline 8s linear infinite;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 480px) {
+    .header-title { font-size: 24px; letter-spacing: 2px; }
+    .info-box { padding: 20px 16px; }
+    .btn { font-size: 12px; letter-spacing: 3px; padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<div class="card">
+  <div class="header-label">// FREE SCRIPT LUXXY</div>
+  <h1 class="header-title">LUXXY_PROJECT</h1>
+  <div class="header-subtitle">free script key</div>
+
+  <div class="info-box">
+    <span class="corner-tl"></span>
+    <span class="corner-tr"></span>
+
+    <div class="section-label">// SCRIPT INFO</div>
+
+    <div class="info-row">
+      <span class="info-label">TYPE</span>
+      <span class="info-value badge">FREE TRIAL</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">DURATION</span>
+      <span class="info-value">3 JAM</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">HWID LOCK</span>
+      <span class="info-value">1 DEVICE</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">COOLDOWN</span>
+      <span class="info-value">3 JAM / DEVICE</span>
+    </div>
+
+    <div class="section-label" style="margin-top: 24px;">// GENERATE KEY</div>
+
+    <button class="btn" id="startBtn" onclick="startVerification()">
+      GENERATE KEY GRATIS
+    </button>
+
+    <div class="status" id="statusText"></div>
+  </div>
+
+  <div class="footer">
+    <a href="https://chat.whatsapp.com/E8f3sjygBnlAEh0QuxfQ4O" target="_blank">WHATSAPP GROUP</a>
+    · LUXXY STORE © 2026
+  </div>
+</div>
+
+<script>
+  // ═══════════════════════════════════════════════════════════════
+  // GANTI INI dengan URL Cloudflare Worker kamu
+  // ═══════════════════════════════════════════════════════════════
+  const WORKER_URL = 'https://luxxys-worker.haloyypayo.workers.dev';
+
+  async function startVerification() {
+    const btn = document.getElementById('startBtn');
+    const status = document.getElementById('statusText');
+
+    btn.disabled = true;
+    btn.textContent = 'LOADING...';
+    status.innerHTML = '<span class="loading"></span>Membuat session...';
+
+    try {
+      const res = await fetch(`${WORKER_URL}/api/create-session`);
+      const data = await res.json();
+
+      if (!data.success) throw new Error('Gagal membuat session');
+
+      localStorage.setItem('luxxys_session', data.sessionId);
+      status.innerHTML = '<span class="loading"></span>Mengalihkan ke LootLabs...';
+
+      setTimeout(() => {
+        window.location.href = data.lootlabsUrl;
+      }, 500);
+
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'GENERATE KEY GRATIS';
+      status.textContent = '❌ Error: ' + err.message;
+      status.style.color = '#ff6060';
+    }
+  }
+</script>
+
+</body>
+</html>
