@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KEY SUCCESS — LUXXY PROJECT</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #050d18; color: #80d4ff;
+    font-family: 'JetBrains Mono', 'Courier New', 'Consolas', monospace;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 20px; overflow-x: hidden; position: relative;
+    letter-spacing: 1px;
+  }
+  body::before {
+    content: "";
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image:
+      linear-gradient(rgba(80, 190, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(80, 190, 255, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -2; pointer-events: none;
+  }
+  body::after {
+    content: "";
+    position: fixed; top: 50%; left: 50%;
+    width: 600px; height: 600px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(80, 190, 255, 0.15) 0%, transparent 70%);
+    z-index: -1; pointer-events: none;
+    animation: pulseGlow 4s ease-in-out infinite;
+  }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  }
+
+  .card { width: 100%; max-width: 460px; animation: fadeUp 0.6s ease-out; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .header-label {
+    font-size: 12px; color: #80d4ff; letter-spacing: 3px;
+    text-align: center; margin-bottom: 8px; opacity: 0.7;
+  }
+  .header-title {
+    font-size: 32px; font-weight: 900; text-align: center;
+    margin-bottom: 6px; letter-spacing: 4px;
+    background: linear-gradient(90deg, #80d4ff, #00e0ff, #ffffff, #00e0ff, #80d4ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: titleShine 4s linear infinite;
+    filter: drop-shadow(0 0 15px rgba(80, 190, 255, 0.6));
+  }
+  @keyframes titleShine { to { background-position: 200% center; } }
+  .header-subtitle {
+    font-size: 12px; text-align: center; color: #a8c8e0;
+    letter-spacing: 3px; margin-bottom: 30px; opacity: 0.7;
+  }
+
+  .info-box {
+    position: relative; background: rgba(5, 13, 24, 0.6);
+    border: 1px solid rgba(80, 190, 255, 0.35);
+    border-radius: 4px; padding: 26px 24px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(80, 190, 255, 0.15);
+  }
+  .info-box::before, .info-box::after, .corner-tl, .corner-tr {
+    content: ""; position: absolute;
+    width: 20px; height: 20px;
+    border: 2px solid #80d4ff;
+  }
+  .info-box::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+  .info-box::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+  .corner-tl { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+  .corner-tr { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+
+  .section-label {
+    font-size: 11px; color: #80d4ff; letter-spacing: 2px;
+    margin-bottom: 18px; opacity: 0.8;
+  }
+  .info-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(80, 190, 255, 0.12);
+    font-size: 13px; letter-spacing: 2px;
+  }
+  .info-row:last-of-type { border-bottom: none; }
+  .info-label { color: #a8c8e0; letter-spacing: 3px; font-size: 12px; }
+  .info-value { color: #80d4ff; font-weight: 700; letter-spacing: 2px; font-size: 13px; }
+  .info-value.badge {
+    padding: 3px 10px; border: 1px solid #80d4ff;
+    border-radius: 3px; font-size: 11px;
+    background: rgba(80, 190, 255, 0.08);
+    box-shadow: 0 0 15px rgba(80, 190, 255, 0.2);
+  }
+  .info-value.success { color: #00e0ff; }
+  .info-value.error { color: #ff6060; }
+  .info-value.waiting { color: #facc15; }
+
+  .btn {
+    display: block; width: 100%; padding: 18px;
+    background: transparent; color: #80d4ff;
+    border: 2px solid #80d4ff; border-radius: 3px;
+    font-family: inherit; font-size: 14px; font-weight: 900;
+    letter-spacing: 4px; cursor: pointer;
+    transition: all 0.3s ease; text-align: center;
+    text-decoration: none; position: relative; overflow: hidden;
+    box-shadow: 0 0 20px rgba(80, 190, 255, 0.2) inset;
+    margin-top: 16px;
+  }
+  .btn:hover {
+    background: rgba(80, 190, 255, 0.15);
+    box-shadow: 0 0 30px rgba(80, 190, 255, 0.5), 0 0 20px rgba(80, 190, 255, 0.3) inset;
+    text-shadow: 0 0 10px rgba(80, 190, 255, 0.8);
+    transform: translateY(-2px);
+  }
+
+  .key-box {
+    background: rgba(5, 13, 24, 0.9);
+    border: 2px solid #80d4ff; border-radius: 4px;
+    padding: 20px 16px; margin: 20px 0;
+    font-family: inherit; font-size: 14px; font-weight: 900;
+    color: #00e0ff; letter-spacing: 2px;
+    text-align: center; word-break: break-all;
+    box-shadow: 0 0 30px rgba(80, 190, 255, 0.4), 0 0 15px rgba(80, 190, 255, 0.3) inset;
+    animation: keyGlow 2s ease-in-out infinite alternate;
+  }
+  @keyframes keyGlow {
+    from { box-shadow: 0 0 30px rgba(80, 190, 255, 0.4), 0 0 15px rgba(80, 190, 255, 0.3) inset; }
+    to { box-shadow: 0 0 50px rgba(80, 190, 255, 0.7), 0 0 25px rgba(80, 190, 255, 0.5) inset; }
+  }
+
+  .status {
+    text-align: center; font-size: 12px; color: #a8c8e0;
+    margin-top: 16px; letter-spacing: 2px; min-height: 20px;
+  }
+  .loading {
+    display: inline-block; width: 12px; height: 12px;
+    border: 2px solid rgba(80, 190, 255, 0.3);
+    border-top-color: #80d4ff; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px; vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .footer {
+    text-align: center; margin-top: 30px;
+    font-size: 11px; color: #5a7a9a; letter-spacing: 3px;
+  }
+  .footer a { color: #80d4ff; text-decoration: none; }
+  .back-link {
+    display: block; text-align: center; margin-top: 20px;
+    font-size: 11px; color: #5a7a9a;
+    text-decoration: none; letter-spacing: 2px;
+    transition: all 0.3s;
+  }
+  .back-link:hover { color: #80d4ff; text-shadow: 0 0 10px #80d4ff; }
+
+  .state { display: none; }
+  .state.active { display: block; animation: fadeIn 0.4s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+  }
+  .scanline {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(80, 190, 255, 0.4), transparent);
+    z-index: 999; pointer-events: none;
+    animation: scanline 8s linear infinite;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<div class="card">
+  <div class="header-label">// LUXXY PROJECT</div>
+  <h1 class="header-title">KEY_SUCCESS</h1>
+  <div class="header-subtitle">verification complete</div>
+
+  <!-- LOADING -->
+  <div class="state active" id="state-loading">
+    <div class="info-box">
+      <span class="corner-tl"></span>
+      <span class="corner-tr"></span>
+      <div class="section-label">// VERIFYING</div>
+      <div class="info-row">
+        <span class="info-label">STATUS</span>
+        <span class="info-value waiting">LOADING...</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">SESSION</span>
+        <span class="info-value" id="sessionShort">-</span>
+      </div>
+      <div class="status">
+        <span class="loading"></span>Mengambil key dari server...
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="state" id="state-success">
+    <div class="info-box">
+      <span class="corner-tl"></span>
+      <span class="corner-tr"></span>
+      <div class="section-label">// KEY BERHASIL DI-GENERATE</div>
+      <div class="info-row">
+        <span class="info-label">STATUS</span>
+        <span class="info-value success">✓ SUCCESS</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">TYPE</span>
+        <span class="info-value badge">FREE TRIAL</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">DURATION</span>
+        <span class="info-value">3 JAM</span>
+      </div>
+      <div class="section-label" style="margin-top: 20px;">// YOUR KEY</div>
+      <div class="key-box" id="keyDisplay">-</div>
+      <button class="btn" onclick="copyKey(event)">📋 COPY KEY</button>
+    </div>
+    <a href="index.html" class="back-link">← KEMBALI KE STORE</a>
+  </div>
+
+  <!-- ERROR -->
+  <div class="state" id="state-error">
+    <div class="info-box">
+      <span class="corner-tl"></span>
+      <span class="corner-tr"></span>
+      <div class="section-label">// ERROR</div>
+      <div class="info-row">
+        <span class="info-label">STATUS</span>
+        <span class="info-value error">✗ FAILED</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">MESSAGE</span>
+        <span class="info-value error" id="errorMsg" style="font-size: 11px;">-</span>
+      </div>
+    </div>
+    <a href="getkey.html" class="back-link">← COBA LAGI</a>
+  </div>
+
+  <div class="footer">
+    <a href="https://chat.whatsapp.com/E8f3sjygBnlAEh0QuxfQ4O" target="_blank">WHATSAPP GROUP</a>
+    · LUXXY STORE © 2026
+  </div>
+</div>
+
+<script>
+  const WORKER_URL = 'https://luxxys-worker.haloyypayo.workers.dev';
+
+  let sessionId = null;
+  let pollInterval = null;
+  let timeoutId = null;
+
+  function showState(name) {
+    document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
+    document.getElementById('state-' + name).classList.add('active');
+  }
+
+  function getSession() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('data') || params.get('session') || localStorage.getItem('luxxys_session');
+  }
+
+  async function fetchKey() {
+    if (!sessionId) return;
+    try {
+      const res = await fetch(`${WORKER_URL}/api/get-key?session=${sessionId}`);
+      const data = await res.json();
+
+      if (data.verified && data.key) {
+        clearInterval(pollInterval);
+        clearTimeout(timeoutId);
+        document.getElementById('keyDisplay').textContent = data.key;
+        showState('success');
+      }
+    } catch (err) {
+      console.warn('Poll error:', err);
+    }
+  }
+
+  function startPolling() {
+    fetchKey();
+    pollInterval = setInterval(fetchKey, 2500);
+
+    timeoutId = setTimeout(() => {
+      if (pollInterval) {
+        clearInterval(pollInterval);
+        document.getElementById('errorMsg').textContent =
+          'Verifikasi timeout. Pastikan kamu sudah selesaikan task LootLabs.';
+        showState('error');
+      }
+    }, 60000);
+  }
+
+  function copyKey(e) {
+    const key = document.getElementById('keyDisplay').textContent;
+    navigator.clipboard.writeText(key).then(() => {
+      const btn = e.target;
+      const old = btn.textContent;
+      btn.textContent = '✓ COPIED!';
+      setTimeout(() => btn.textContent = old, 2000);
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    sessionId = getSession();
+
+    if (!sessionId) {
+      document.getElementById('errorMsg').textContent =
+        'Session tidak ditemukan. Silakan generate ulang.';
+      showState('error');
+      return;
+    }
+
+    document.getElementById('sessionShort').textContent = sessionId.slice(0, 8).toUpperCase();
+    startPolling();
+  });
+</script>
+
+</body>
+</html>
