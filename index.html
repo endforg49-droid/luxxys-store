@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUXXY STORE</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+  body { background: #050d18; color: #fff; min-height: 100vh; overflow-x: hidden; position: relative; }
+  .bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; opacity: 0.4; }
+  .bg-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at top, rgba(80, 190, 255, 0.15) 0%, transparent 50%),
+                linear-gradient(180deg, rgba(5, 13, 24, 0.6) 0%, rgba(5, 13, 24, 0.95) 100%);
+    z-index: -1;
+  }
+  header {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    background: rgba(5, 13, 24, 0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(80, 190, 255, 0.15);
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 900; letter-spacing: 1px; }
+  .logo-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, #80d4ff, #00e0ff);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; box-shadow: 0 4px 15px rgba(80, 190, 255, 0.4);
+  }
+  .logo-text {
+    background: linear-gradient(90deg, #80d4ff, #00e0ff, #80d4ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+  }
+  @keyframes shine { to { background-position: 200% center; } }
+  .header-actions { display: flex; gap: 8px; }
+  .header-btn {
+    padding: 8px 14px; background: rgba(80, 190, 255, 0.1);
+    border: 1px solid rgba(80, 190, 255, 0.3);
+    border-radius: 8px; color: #80d4ff; font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: all 0.25s;
+  }
+  .header-btn:hover { background: rgba(80, 190, 255, 0.2); border-color: #80d4ff; }
+  .hero { padding: 60px 20px 40px; text-align: center; max-width: 600px; margin: 0 auto; }
+  .hero-label {
+    display: inline-block; font-size: 11px; font-weight: 800;
+    letter-spacing: 3px; color: #80d4ff;
+    margin-bottom: 16px; padding: 4px 12px;
+    border: 1px solid rgba(80, 190, 255, 0.3); border-radius: 20px;
+  }
+  .hero-title {
+    font-size: 34px; font-weight: 900; line-height: 1.15; margin-bottom: 16px;
+    background: linear-gradient(90deg, #ffffff 0%, #80d4ff 50%, #ffffff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: shine 4s linear infinite;
+  }
+  .hero-subtitle { font-size: 14px; color: #a8c8e0; line-height: 1.6; max-width: 420px; margin: 0 auto; }
+  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+  .tier {
+    position: relative;
+    background: linear-gradient(135deg, rgba(10, 26, 47, 0.9) 0%, rgba(5, 13, 24, 0.95) 100%);
+    border: 1px solid rgba(80, 190, 255, 0.25);
+    border-radius: 18px; padding: 26px 22px; margin-bottom: 20px;
+    overflow: hidden; backdrop-filter: blur(10px);
+    transition: all 0.3s;
+  }
+  .tier:hover {
+    border-color: rgba(80, 190, 255, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(80, 190, 255, 0.15);
+  }
+  .tier::before {
+    content: ""; position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, #80d4ff, #00e0ff, #80d4ff);
+    background-size: 100% 200%;
+    animation: slideDown 3s linear infinite;
+  }
+  @keyframes slideDown { 0% { background-position: 0 0; } 100% { background-position: 0 200%; } }
+  .badge {
+    display: inline-block; padding: 4px 12px; border-radius: 20px;
+    font-size: 10px; font-weight: 800; letter-spacing: 1.2px; margin-bottom: 14px;
+  }
+  .badge.popular {
+    background: linear-gradient(90deg, rgba(250, 204, 21, 0.2), rgba(234, 179, 8, 0.15));
+    color: #facc15; border: 1px solid rgba(250, 204, 21, 0.3);
+  }
+  .badge.best {
+    background: linear-gradient(90deg, rgba(80, 190, 255, 0.25), rgba(0, 224, 255, 0.15));
+    color: #80d4ff; border: 1px solid rgba(80, 190, 255, 0.4);
+  }
+  .tier-title { font-size: 24px; font-weight: 900; margin-bottom: 4px; }
+  .tier-desc { font-size: 12px; color: #a8c8e0; margin-bottom: 20px; }
+  .price-old { font-size: 14px; color: #5a7a9a; text-decoration: line-through; margin-bottom: 4px; }
+  .price-current { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
+  .price-currency { font-size: 20px; font-weight: 700; color: #80d4ff; }
+  .price-amount {
+    font-size: 40px; font-weight: 900;
+    background: linear-gradient(90deg, #80d4ff, #00e0ff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1;
+  }
+  .price-period { font-size: 12px; color: #7bb8ff; margin-bottom: 20px; }
+  .price-period .save { color: #80d4ff; font-weight: 700; }
+  .tier-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(80, 190, 255, 0.3), transparent);
+    margin-bottom: 20px;
+  }
+  .features { list-style: none; margin-bottom: 22px; }
+  .features li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13px; color: #d0e0f0; padding: 5px 0; line-height: 1.5;
+  }
+  .check-icon {
+    flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(80, 190, 255, 0.2), rgba(0, 224, 255, 0.15));
+    border: 1px solid #80d4ff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #80d4ff; font-weight: 900; margin-top: 1px;
+  }
+  .features li strong { color: #80d4ff; font-weight: 800; }
+  .tier-btn {
+    display: block; width: 100%; padding: 16px; border: none;
+    border-radius: 12px; font-size: 14px; font-weight: 900;
+    letter-spacing: 1.5px; cursor: pointer; transition: all 0.3s;
+    text-align: center; position: relative; overflow: hidden;
+    text-decoration: none;
+  }
+  .tier-btn.ghost {
+    background: transparent; border: 1.5px solid rgba(80, 190, 255, 0.4);
+    color: #80d4ff;
+  }
+  .tier-btn.ghost:hover { background: rgba(80, 190, 255, 0.1); border-color: #80d4ff; }
+  .tier-btn.primary {
+    background: linear-gradient(90deg, #80d4ff, #00e0ff);
+    color: #001; box-shadow: 0 8px 25px rgba(80, 190, 255, 0.35);
+  }
+  .tier-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 12px 35px rgba(80, 190, 255, 0.5); }
+  .hwid-note {
+    margin-top: 12px; padding: 8px 12px;
+    background: rgba(255, 200, 60, 0.08);
+    border-left: 2px solid #facc15;
+    border-radius: 4px; font-size: 11px;
+    color: #facc15; line-height: 1.5;
+  }
+  .floating-btns {
+    position: fixed; right: 16px; bottom: 30px;
+    display: flex; flex-direction: column; gap: 12px; z-index: 90;
+  }
+  .float-btn {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    text-decoration: none; font-size: 22px;
+    position: relative;
+  }
+  .float-btn:hover { transform: scale(1.1); }
+  .float-btn.wa-group { background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; }
+  .float-btn.dc { background: linear-gradient(135deg, #5865F2, #4752C4); color: #fff; }
+  .float-btn.tt { background: linear-gradient(135deg, #000, #222); color: #fff; border: 1px solid rgba(80, 190, 255, 0.3); }
+  .faq { max-width: 600px; margin: 40px auto 0; padding: 20px; }
+  .faq-title { font-size: 20px; font-weight: 900; color: #80d4ff; margin-bottom: 20px; letter-spacing: 1px; }
+  .faq-item {
+    background: rgba(10, 26, 47, 0.6);
+    border: 1px solid rgba(80, 190, 255, 0.15);
+    border-radius: 12px; margin-bottom: 10px;
+    overflow: hidden; transition: all 0.3s;
+  }
+  .faq-item:hover { border-color: rgba(80, 190, 255, 0.4); }
+  .faq-q {
+    padding: 16px 20px; font-size: 14px; font-weight: 700;
+    color: #fff; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    user-select: none;
+  }
+  .faq-q::after { content: "+"; color: #80d4ff; font-size: 20px; font-weight: 900; transition: transform 0.3s; }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden; transition: max-height 0.3s;
+    padding: 0 20px; font-size: 13px; color: #a8c8e0; line-height: 1.6;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding: 0 20px 16px; }
+  footer {
+    text-align: center; padding: 30px 20px;
+    font-size: 12px; color: #5a7a9a;
+    border-top: 1px solid rgba(80, 190, 255, 0.1);
+    margin-top: 40px;
+  }
+  footer a { color: #80d4ff; text-decoration: none; }
+  @media (max-width: 480px) {
+    .hero { padding: 40px 16px 30px; }
+    .hero-title { font-size: 26px; }
+    .container { padding: 16px; }
+    .tier { padding: 22px 18px; }
+    .tier-title { font-size: 20px; }
+    .price-amount { font-size: 34px; }
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #050d18; }
+  ::-webkit-scrollbar-thumb { background: rgba(80, 190, 255, 0.3); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<video class="bg-video" autoplay muted loop playsinline>
+  <source src="https://cdn.pixabay.com/video/2022/12/11/143141-780647548_large.mp4" type="video/mp4">
+</video>
+<div class="bg-overlay"></div>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <div class="logo-text">LUXXY STORE</div>
+  </div>
+  <div class="header-actions">
+    <button class="header-btn">S&K</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-label">PAKET LUXXY PROJECT</div>
+  <h1 class="hero-title">Satu key,<br>satu device.</h1>
+  <p class="hero-subtitle">
+    Semua paket sudah include HWID Lock — 1 key hanya bisa dipakai di 1 device. Aman dari sharing ilegal.
+  </p>
+</section>
+
+<div class="container">
+
+  <!-- TIER 1: FREE (LootLabs) -->
+  <div class="tier">
+    <div class="badge" style="background: linear-gradient(90deg, rgba(74, 222, 128, 0.2), rgba(34, 197, 94, 0.15)); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3);">
+      FREE
+    </div>
+    <h2 class="tier-title">Free Trial</h2>
+    <p class="tier-desc">Coba dulu, gratis selamanya</p>
+    <div class="price-old">Rp 0</div>
+    <div class="price-current">
+      <span class="price-currency">Rp</span>
+      <span class="price-amount">0</span>
+    </div>
+    <div class="price-period">/ gratis · tanpa syarat</div>
+    <div class="tier-divider"></div>
+    <ul class="features">
+      <li><span class="check-icon">✓</span> Basic Scripts Universal</li>
+      <li><span class="check-icon">✓</span> Akses 1 Hari</li>
+      <li><span class="check-icon">✓</span> Support Basic</li>
+    </ul>
+    <div class="hwid-note">🔒 HWID Lock aktif — 1 key = 1 device</div>
+    <br>
+    <!-- GANTI LINK LOOTLABS -->
+    <a href="https://loot-link.com/s?XXXXXXXX" target="_blank" class="tier-btn ghost">
+      🎁 GET FREE KEY
+    </a>
+  </div>
+
+  <!-- TIER 2: 5 HARI -->
+  <div class="tier">
+    <div class="badge popular">POPULAR</div>
+    <h2 class="tier-title">Paket Luxxy Project — 5 Hari</h2>
+    <p class="tier-desc">Akses penuh selama 5 hari. Cocok untuk yang mau coba premium tanpa komitmen panjang.</p>
+    <div class="price-old">Rp 50.000</div>
+    <div class="price-current">
+      <span class="price-currency">Rp</span>
+      <span class="price-amount">25K</span>
+    </div>
+    <div class="price-period">/ 5 hari · <span class="save">hemat 50%</span></div>
+    <div class="tier-divider"></div>
+    <ul class="features">
+      <li><span class="check-icon">✓</span> <strong>Premium Scripts</strong> Universal 5 Hari</li>
+      <li><span class="check-icon">✓</span> Copy Map 99% mirip aslinya</li>
+      <li><span class="check-icon">✓</span> Speed Hack & Fly Mode</li>
+      <li><span class="check-icon">✓</span> Auto Walk & Infinite Jump</li>
+      <li><span class="check-icon">✓</span> Support 24/7 via WhatsApp</li>
+    </ul>
+    <div class="hwid-note">🔒 HWID Lock aktif — 1 key hanya bisa dipakai di 1 device. Tidak bisa dipakai di 5 device sekaligus.</div>
+    <br>
+    <a href="https://wa.me/6282142293503?text=Halo%20Admin%20LUXXY%2C%20saya%20mau%20beli%20Paket%20Luxxy%20Project%205%20Hari" target="_blank" class="tier-btn ghost">
+      📱 BELI VIA WHATSAPP
+    </a>
+  </div>
+
+  <!-- TIER 3: LIFETIME -->
+  <div class="tier">
+    <div class="badge best">BEST VALUE</div>
+    <h2 class="tier-title">Paket Luxxy Project — Lifetime</h2>
+    <p class="tier-desc">Sekali bayar, akses selamanya. Tidak perlu perpanjang. Termasuk semua update di masa depan.</p>
+    <div class="price-old">Rp 150.000</div>
+    <div class="price-current">
+      <span class="price-currency">Rp</span>
+      <span class="price-amount">100K</span>
+    </div>
+    <div class="price-period">/ selamanya · <span class="save">hemat 40%</span></div>
+    <div class="tier-divider"></div>
+    <ul class="features">
+      <li><span class="check-icon">✓</span> Semua fitur Paket 5 Hari</li>
+      <li><span class="check-icon">✓</span> <strong>Lifetime Access</strong> — tidak perlu perpanjang</li>
+      <li><span class="check-icon">✓</span> VIP Discord Role — akses eksklusif</li>
+      <li><span class="check-icon">✓</span> Priority Support — respon &lt;5 menit</li>
+      <li><span class="check-icon">✓</span> Early Access — fitur baru lebih dulu</li>
+      <li><span class="check-icon">✓</span> Copy Map 99% mirip aslinya</li>
+      <li><span class="check-icon">✓</span> Unlimited Update — semua versi baru gratis</li>
+    </ul>
+    <div class="hwid-note">🔒 HWID Lock aktif — 1 key hanya bisa dipakai di 1 device. Tidak bisa share ke device lain.</div>
+    <br>
+    <a href="https://wa.me/6282142293503?text=Halo%20Admin%20LUXXY%2C%20saya%20mau%20beli%20Paket%20Luxxy%20Project%20Lifetime" target="_blank" class="tier-btn primary">
+      👑 BELI VIA WHATSAPP
+    </a>
+  </div>
+
+</div>
+
+<section class="faq">
+  <div class="faq-title">FAQ</div>
+  <div class="faq-item">
+    <div class="faq-q">Apa itu HWID Lock?</div>
+    <div class="faq-a">HWID (Hardware ID) Lock artinya setiap key terikat ke 1 device. Setelah key dipakai pertama kali, key hanya bisa dipakai di device tersebut. Tidak bisa dipakai 5 device sekaligus dengan 1 key.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Bagaimana cara mendapatkan key?</div>
+    <div class="faq-a">Untuk Free Trial, klik tombol LootLabs dan selesaikan task. Untuk Paket Luxxy Project (5 Hari atau Lifetime), hubungi admin via WhatsApp 082142293503.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Kalau saya ganti device, apakah key bisa dipindah?</div>
+    <div class="faq-a">Bisa, tapi harus request reset HWID ke admin. Ada biaya reset atau gratis 1x per bulan (tergantung kebijakan admin).</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Apakah ada garansi uang kembali?</div>
+    <div class="faq-a">Kami tidak menyediakan refund. Pastikan kamu paham sebelum membeli. Free Trial tersedia untuk coba dulu.</div>
+  </div>
+</section>
+
+<footer>
+  © 2026 LUXXY STORE — All Rights Reserved<br>
+  <a href="https://youtube.com/@TERTOMPROJECT" target="_blank">@TERTOMPROJECT</a>
+</footer>
+
+<div class="floating-btns">
+  <a href="https://chat.whatsapp.com/E8f3sjygBnlAEh0QuxfQ4O" target="_blank" class="float-btn wa-group" title="Join Grup WhatsApp">💬</a>
+  <a href="https://discord.gg/XXXXXX" target="_blank" class="float-btn dc" title="Discord">🎮</a>
+  <a href="https://tiktok.com/@XXXXXX" target="_blank" class="float-btn tt" title="TikTok">🎵</a>
+</div>
+
+<script>
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      item.classList.toggle('open');
+    });
+  });
+</script>
+
+</body>
+</html>
