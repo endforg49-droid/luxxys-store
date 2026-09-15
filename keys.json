@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "keys": {
+    "LUXXY-FREE-001": { "tier": "free", "created": "2026-01-01" },
+    "LUXXY-FREE-002": { "tier": "free", "created": "2026-01-01" },
+    "LUXXY-FREE-003": { "tier": "free", "created": "2026-01-01" },
+    "LUXXY-5D-A1B2C": { "tier": "5days", "created": "2026-01-01", "duration": 5 },
+    "LUXXY-5D-D3E4F": { "tier": "5days", "created": "2026-01-01", "duration": 5 },
+    "LUXXY-LIFE-XYZ99": { "tier": "lifetime", "created": "2026-01-01" }
+  }
+}
