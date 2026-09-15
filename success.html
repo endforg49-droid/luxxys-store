@@ -103,21 +103,26 @@
   .info-value.waiting { color: #facc15; }
 
   .btn {
-    display: block; width: 100%; padding: 18px;
+    display: block; width: 100%; padding: 16px;
     background: transparent; color: #80d4ff;
     border: 2px solid #80d4ff; border-radius: 3px;
-    font-family: inherit; font-size: 14px; font-weight: 900;
-    letter-spacing: 4px; cursor: pointer;
+    font-family: inherit; font-size: 13px; font-weight: 900;
+    letter-spacing: 3px; cursor: pointer;
     transition: all 0.3s ease; text-align: center;
     text-decoration: none; position: relative; overflow: hidden;
     box-shadow: 0 0 20px rgba(80, 190, 255, 0.2) inset;
-    margin-top: 16px;
+    margin-top: 14px;
   }
-  .btn:hover {
+  .btn:hover:not(:disabled) {
     background: rgba(80, 190, 255, 0.15);
     box-shadow: 0 0 30px rgba(80, 190, 255, 0.5), 0 0 20px rgba(80, 190, 255, 0.3) inset;
     text-shadow: 0 0 10px rgba(80, 190, 255, 0.8);
     transform: translateY(-2px);
+  }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn.primary {
+    background: rgba(80, 190, 255, 0.15);
+    box-shadow: 0 0 30px rgba(80, 190, 255, 0.4);
   }
 
   .key-box {
@@ -148,6 +153,21 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  .progress {
+    height: 3px;
+    background: rgba(80, 190, 255, 0.15);
+    border-radius: 2px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #80d4ff, #00e0ff);
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px #80d4ff;
+  }
+
   .footer {
     text-align: center; margin-top: 30px;
     font-size: 11px; color: #5a7a9a; letter-spacing: 3px;
@@ -164,6 +184,14 @@
   .state { display: none; }
   .state.active { display: block; animation: fadeIn 0.4s ease-out; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .timer-text {
+    font-size: 11px;
+    color: #5a7a9a;
+    text-align: center;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
 
   @keyframes scanline {
     0% { transform: translateY(-100%); }
@@ -196,15 +224,33 @@
       <div class="section-label">// VERIFYING</div>
       <div class="info-row">
         <span class="info-label">STATUS</span>
-        <span class="info-value waiting">LOADING...</span>
+        <span class="info-value waiting" id="loadStatus">LOADING...</span>
       </div>
       <div class="info-row">
         <span class="info-label">SESSION</span>
         <span class="info-value" id="sessionShort">-</span>
       </div>
-      <div class="status">
-        <span class="loading"></span>Mengambil key dari server...
+      <div class="info-row">
+        <span class="info-label">CHECKS</span>
+        <span class="info-value" id="checkCount">0</span>
       </div>
+
+      <div class="status">
+        <span class="loading"></span><span id="loadMessage">Menunggu verifikasi LootLabs...</span>
+      </div>
+
+      <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="timer-text" id="timerText">Waktu tersisa: 3:00</div>
+
+      <button class="btn primary" onclick="forceCheck()" id="checkNowBtn" style="margin-top: 18px;">
+        🔄 CHECK NOW
+      </button>
+
+      <button class="btn" onclick="claimKey()" id="claimBtn" style="margin-top: 10px; font-size: 11px; border-color: #facc15; color: #facc15;">
+        ✅ SAYA SUDAH SELESAI
+      </button>
     </div>
   </div>
 
@@ -247,8 +293,8 @@
         <span class="info-label">MESSAGE</span>
         <span class="info-value error" id="errorMsg" style="font-size: 11px;">-</span>
       </div>
+      <button class="btn" onclick="location.href='getkey.html'" style="margin-top: 16px;">🔄 COBA LAGI</button>
     </div>
-    <a href="getkey.html" class="back-link">← COBA LAGI</a>
   </div>
 
   <div class="footer">
@@ -259,10 +305,14 @@
 
 <script>
   const WORKER_URL = 'https://luxxys-worker.haloyypayo.workers.dev';
+  const TOTAL_TIMEOUT = 180; // 3 menit
 
   let sessionId = null;
   let pollInterval = null;
+  let timeLeft = TOTAL_TIMEOUT;
+  let checkCount = 0;
   let timeoutId = null;
+  let tickId = null;
 
   function showState(name) {
     document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
@@ -271,38 +321,110 @@
 
   function getSession() {
     const params = new URLSearchParams(window.location.search);
-    return params.get('data') || params.get('session') || localStorage.getItem('luxxys_session');
+    return params.get('data') || params.get('session') || params.get('unique_id') || localStorage.getItem('luxxys_session');
   }
 
-  async function fetchKey() {
-    if (!sessionId) return;
+  async function fetchKey(silent) {
+    if (!sessionId) return false;
+    checkCount++;
+    document.getElementById('checkCount').textContent = checkCount;
+
     try {
-      const res = await fetch(`${WORKER_URL}/api/get-key?session=${sessionId}`);
+      const res = await fetch(`${WORKER_URL}/api/get-key?session=${sessionId}&t=${Date.now()}`);
       const data = await res.json();
 
       if (data.verified && data.key) {
         clearInterval(pollInterval);
         clearTimeout(timeoutId);
+        clearInterval(tickId);
         document.getElementById('keyDisplay').textContent = data.key;
         showState('success');
+        return true;
       }
     } catch (err) {
       console.warn('Poll error:', err);
+      if (!silent) {
+        document.getElementById('loadMessage').textContent = 'Koneksi error, mencoba lagi...';
+      }
+    }
+    return false;
+  }
+
+  async function forceCheck() {
+    const btn = document.getElementById('checkNowBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ CEK...';
+    await fetchKey(false);
+    btn.disabled = false;
+    btn.textContent = '🔄 CHECK NOW';
+  }
+
+  async function claimKey() {
+    if (!sessionId) return;
+    const btn = document.getElementById('claimBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ MEMPROSES...';
+
+    try {
+      // Panggil endpoint claim (memaksa generate key)
+      const res = await fetch(`${WORKER_URL}/api/claim-key?session=${sessionId}`);
+      const data = await res.json();
+
+      if (data.success && data.key) {
+        clearInterval(pollInterval);
+        clearTimeout(timeoutId);
+        clearInterval(tickId);
+        document.getElementById('keyDisplay').textContent = data.key;
+        showState('success');
+        return;
+      }
+
+      if (data.verified && data.key) {
+        clearInterval(pollInterval);
+        clearTimeout(timeoutId);
+        clearInterval(tickId);
+        document.getElementById('keyDisplay').textContent = data.key;
+        showState('success');
+        return;
+      }
+
+      document.getElementById('loadMessage').textContent = 'Belum terverifikasi. Pastikan task LootLabs selesai.';
+      btn.disabled = false;
+      btn.textContent = '✅ SAYA SUDAH SELESAI';
+
+    } catch(err) {
+      document.getElementById('loadMessage').textContent = 'Error: ' + err.message;
+      btn.disabled = false;
+      btn.textContent = '✅ SAYA SUDAH SELESAI';
     }
   }
 
   function startPolling() {
-    fetchKey();
-    pollInterval = setInterval(fetchKey, 2500);
+    fetchKey(true);
 
-    timeoutId = setTimeout(() => {
-      if (pollInterval) {
+    // Polling lebih cepat: 1 detik
+    pollInterval = setInterval(() => fetchKey(true), 1000);
+
+    // Tick timer
+    tickId = setInterval(() => {
+      timeLeft--;
+      const m = Math.floor(timeLeft / 60);
+      const s = timeLeft % 60;
+      document.getElementById('timerText').textContent =
+        `Waktu tersisa: ${m}:${s.toString().padStart(2, '0')}`;
+
+      // Progress bar (0-100%)
+      const progress = ((TOTAL_TIMEOUT - timeLeft) / TOTAL_TIMEOUT) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+
+      if (timeLeft <= 0) {
         clearInterval(pollInterval);
+        clearInterval(tickId);
         document.getElementById('errorMsg').textContent =
-          'Verifikasi timeout. Pastikan kamu sudah selesaikan task LootLabs.';
+          'Verifikasi timeout. Klik "SAYA SUDAH SELESAI" kalau sudah selesaikan task LootLabs.';
         showState('error');
       }
-    }, 60000);
+    }, 1000);
   }
 
   function copyKey(e) {
