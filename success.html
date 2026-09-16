@@ -102,6 +102,21 @@
   .info-value.error { color: #ff6060; }
   .info-value.waiting { color: #facc15; }
 
+  .key-box {
+    background: rgba(5, 13, 24, 0.9);
+    border: 2px solid #80d4ff; border-radius: 4px;
+    padding: 20px 16px; margin: 20px 0;
+    font-family: inherit; font-size: 14px; font-weight: 900;
+    color: #00e0ff; letter-spacing: 2px;
+    text-align: center; word-break: break-all;
+    box-shadow: 0 0 30px rgba(80, 190, 255, 0.4), 0 0 15px rgba(80, 190, 255, 0.3) inset;
+    animation: keyGlow 2s ease-in-out infinite alternate;
+  }
+  @keyframes keyGlow {
+    from { box-shadow: 0 0 30px rgba(80, 190, 255, 0.4), 0 0 15px rgba(80, 190, 255, 0.3) inset; }
+    to { box-shadow: 0 0 50px rgba(80, 190, 255, 0.7), 0 0 25px rgba(80, 190, 255, 0.5) inset; }
+  }
+
   .btn {
     display: block; width: 100%; padding: 16px;
     background: transparent; color: #80d4ff;
@@ -124,20 +139,15 @@
     background: rgba(80, 190, 255, 0.15);
     box-shadow: 0 0 30px rgba(80, 190, 255, 0.4);
   }
-
-  .key-box {
-    background: rgba(5, 13, 24, 0.9);
-    border: 2px solid #80d4ff; border-radius: 4px;
-    padding: 20px 16px; margin: 20px 0;
-    font-family: inherit; font-size: 14px; font-weight: 900;
-    color: #00e0ff; letter-spacing: 2px;
-    text-align: center; word-break: break-all;
-    box-shadow: 0 0 30px rgba(80, 190, 255, 0.4), 0 0 15px rgba(80, 190, 255, 0.3) inset;
-    animation: keyGlow 2s ease-in-out infinite alternate;
+  .btn.warning {
+    border-color: #facc15;
+    color: #facc15;
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.2) inset;
   }
-  @keyframes keyGlow {
-    from { box-shadow: 0 0 30px rgba(80, 190, 255, 0.4), 0 0 15px rgba(80, 190, 255, 0.3) inset; }
-    to { box-shadow: 0 0 50px rgba(80, 190, 255, 0.7), 0 0 25px rgba(80, 190, 255, 0.5) inset; }
+  .btn.warning:hover:not(:disabled) {
+    background: rgba(250, 204, 21, 0.15);
+    box-shadow: 0 0 30px rgba(250, 204, 21, 0.5), 0 0 20px rgba(250, 204, 21, 0.3) inset;
+    text-shadow: 0 0 10px rgba(250, 204, 21, 0.8);
   }
 
   .status {
@@ -168,6 +178,14 @@
     box-shadow: 0 0 10px #80d4ff;
   }
 
+  .timer-text {
+    font-size: 11px;
+    color: #5a7a9a;
+    text-align: center;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
   .footer {
     text-align: center; margin-top: 30px;
     font-size: 11px; color: #5a7a9a; letter-spacing: 3px;
@@ -184,14 +202,6 @@
   .state { display: none; }
   .state.active { display: block; animation: fadeIn 0.4s ease-out; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-  .timer-text {
-    font-size: 11px;
-    color: #5a7a9a;
-    text-align: center;
-    margin-top: 8px;
-    letter-spacing: 1px;
-  }
 
   @keyframes scanline {
     0% { transform: translateY(-100%); }
@@ -221,7 +231,9 @@
     <div class="info-box">
       <span class="corner-tl"></span>
       <span class="corner-tr"></span>
+
       <div class="section-label">// VERIFYING</div>
+
       <div class="info-row">
         <span class="info-label">STATUS</span>
         <span class="info-value waiting" id="loadStatus">LOADING...</span>
@@ -244,11 +256,11 @@
       </div>
       <div class="timer-text" id="timerText">Waktu tersisa: 3:00</div>
 
-      <button class="btn primary" onclick="forceCheck()" id="checkNowBtn" style="margin-top: 18px;">
+      <button class="btn primary" onclick="forceCheck()" id="checkNowBtn">
         🔄 CHECK NOW
       </button>
 
-      <button class="btn" onclick="claimKey()" id="claimBtn" style="margin-top: 10px; font-size: 11px; border-color: #facc15; color: #facc15;">
+      <button class="btn warning" onclick="claimKey()" id="claimBtn" style="font-size: 11px;">
         ✅ SAYA SUDAH SELESAI
       </button>
     </div>
@@ -259,7 +271,9 @@
     <div class="info-box">
       <span class="corner-tl"></span>
       <span class="corner-tr"></span>
+
       <div class="section-label">// KEY BERHASIL DI-GENERATE</div>
+
       <div class="info-row">
         <span class="info-label">STATUS</span>
         <span class="info-value success">✓ SUCCESS</span>
@@ -272,8 +286,11 @@
         <span class="info-label">DURATION</span>
         <span class="info-value">3 JAM</span>
       </div>
+
       <div class="section-label" style="margin-top: 20px;">// YOUR KEY</div>
+
       <div class="key-box" id="keyDisplay">-</div>
+
       <button class="btn" onclick="copyKey(event)">📋 COPY KEY</button>
     </div>
     <a href="index.html" class="back-link">← KEMBALI KE STORE</a>
@@ -284,7 +301,9 @@
     <div class="info-box">
       <span class="corner-tl"></span>
       <span class="corner-tr"></span>
+
       <div class="section-label">// ERROR</div>
+
       <div class="info-row">
         <span class="info-label">STATUS</span>
         <span class="info-value error">✗ FAILED</span>
@@ -293,7 +312,8 @@
         <span class="info-label">MESSAGE</span>
         <span class="info-value error" id="errorMsg" style="font-size: 11px;">-</span>
       </div>
-      <button class="btn" onclick="location.href='getkey.html'" style="margin-top: 16px;">🔄 COBA LAGI</button>
+
+      <button class="btn" onclick="location.href='getkey.html'">🔄 COBA LAGI</button>
     </div>
   </div>
 
@@ -313,6 +333,7 @@
   let checkCount = 0;
   let timeoutId = null;
   let tickId = null;
+  let isProcessing = false;
 
   function showState(name) {
     document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
@@ -325,7 +346,7 @@
   }
 
   async function fetchKey(silent) {
-    if (!sessionId) return false;
+    if (!sessionId || isProcessing) return false;
     checkCount++;
     document.getElementById('checkCount').textContent = checkCount;
 
@@ -334,11 +355,7 @@
       const data = await res.json();
 
       if (data.verified && data.key) {
-        clearInterval(pollInterval);
-        clearTimeout(timeoutId);
-        clearInterval(tickId);
-        document.getElementById('keyDisplay').textContent = data.key;
-        showState('success');
+        successHandler(data.key);
         return true;
       }
     } catch (err) {
@@ -350,7 +367,16 @@
     return false;
   }
 
+  function successHandler(key) {
+    clearInterval(pollInterval);
+    clearTimeout(timeoutId);
+    clearInterval(tickId);
+    document.getElementById('keyDisplay').textContent = key;
+    showState('success');
+  }
+
   async function forceCheck() {
+    if (isProcessing) return;
     const btn = document.getElementById('checkNowBtn');
     btn.disabled = true;
     btn.textContent = '⏳ CEK...';
@@ -360,40 +386,43 @@
   }
 
   async function claimKey() {
-    if (!sessionId) return;
+    if (!sessionId || isProcessing) return;
+
+    isProcessing = true;
     const btn = document.getElementById('claimBtn');
     btn.disabled = true;
     btn.textContent = '⏳ MEMPROSES...';
 
     try {
-      // Panggil endpoint claim (memaksa generate key)
-      const res = await fetch(`${WORKER_URL}/api/claim-key?session=${sessionId}`);
+      // Cek dulu di get-key (auto-fallback di worker)
+      const res = await fetch(`${WORKER_URL}/api/get-key?session=${sessionId}&t=${Date.now()}`);
       const data = await res.json();
 
-      if (data.success && data.key) {
-        clearInterval(pollInterval);
-        clearTimeout(timeoutId);
-        clearInterval(tickId);
-        document.getElementById('keyDisplay').textContent = data.key;
-        showState('success');
-        return;
-      }
-
       if (data.verified && data.key) {
-        clearInterval(pollInterval);
-        clearTimeout(timeoutId);
-        clearInterval(tickId);
-        document.getElementById('keyDisplay').textContent = data.key;
-        showState('success');
+        successHandler(data.key);
         return;
       }
 
-      document.getElementById('loadMessage').textContent = 'Belum terverifikasi. Pastikan task LootLabs selesai.';
+      // Kalau belum verified (session baru < 20 detik)
+      if (data.waitMs) {
+        const seconds = Math.ceil(data.waitMs / 1000);
+        document.getElementById('loadMessage').textContent =
+          `Tunggu ${seconds} detik lagi...`;
+        isProcessing = false;
+        btn.disabled = false;
+        btn.textContent = '✅ SAYA SUDAH SELESAI';
+        return;
+      }
+
+      document.getElementById('loadMessage').textContent =
+        'Belum terverifikasi. Coba lagi dalam beberapa detik.';
+      isProcessing = false;
       btn.disabled = false;
       btn.textContent = '✅ SAYA SUDAH SELESAI';
 
     } catch(err) {
       document.getElementById('loadMessage').textContent = 'Error: ' + err.message;
+      isProcessing = false;
       btn.disabled = false;
       btn.textContent = '✅ SAYA SUDAH SELESAI';
     }
@@ -402,10 +431,10 @@
   function startPolling() {
     fetchKey(true);
 
-    // Polling lebih cepat: 1 detik
+    // Polling setiap 1 detik
     pollInterval = setInterval(() => fetchKey(true), 1000);
 
-    // Tick timer
+    // Timer tick
     tickId = setInterval(() => {
       timeLeft--;
       const m = Math.floor(timeLeft / 60);
@@ -413,7 +442,6 @@
       document.getElementById('timerText').textContent =
         `Waktu tersisa: ${m}:${s.toString().padStart(2, '0')}`;
 
-      // Progress bar (0-100%)
       const progress = ((TOTAL_TIMEOUT - timeLeft) / TOTAL_TIMEOUT) * 100;
       document.getElementById('progressBar').style.width = progress + '%';
 
